@@ -33,8 +33,8 @@ jobs:
         with:
           host: ${{ secrets.DIGITALOCEAN_VM_IP }}
           username: ${{ secrets.DIGITALOCEAN_VM_USERNAME }}
-          #key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
-          password: ${{ secrets.DIGITALOCEAN_VM_PASSWORD }}
+          key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
+          #password: ${{ secrets.DIGITALOCEAN_VM_PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/my-nginx-site:latest
