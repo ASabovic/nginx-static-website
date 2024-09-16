@@ -46,7 +46,7 @@ jobs:
           key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           source: 'ansible/*'
-          target: '~/ansible'
+          target: '~/ansible/'
 
       - name: Create hosts.ini dynamically on VM
         uses: appleboy/ssh-action@v0.1.7
@@ -77,7 +77,7 @@ jobs:
           key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            ansible-playbook -i ~/ansible/hosts.ini ~/ansible/install_docker.yml
+            ansible-playbook -i ~/ansible/hosts.ini ~/ansible/ansible/install_docker.yml
 
       - name: Deploy Docker container
         uses: appleboy/ssh-action@v0.1.7
