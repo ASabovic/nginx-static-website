@@ -38,18 +38,6 @@ jobs:
           script: |
             mkdir -p ~/ansible
 
-      - name: Install Ansible on the VM
-        uses: appleboy/ssh-action@v0.1.7
-        with:
-          host: ${{ secrets.DIGITALOCEAN_VM_IP }}
-          username: ${{ secrets.DIGITALOCEAN_VM_USERNAME }}
-          key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
-          port: ${{ secrets.PORT }}
-          script: |
-            sudo apt update
-            # sudo apt install -y python3-pip
-            # pip3 install ansible
-
       - name: Copy Ansible files to VM
         uses: appleboy/scp-action@v0.1.3
         with:
