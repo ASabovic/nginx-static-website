@@ -52,7 +52,7 @@ jobs:
           port: ${{ secrets.PORT }}
           source: 'ansible/*'
           target: '~/ansible/'
-          
+
       - name: Connect to DigitalOcean VM via SSH and deploy the new Docker image 
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -62,7 +62,7 @@ jobs:
           #password: ${{ secrets.DIGITALOCEAN_VM_PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            ansible-playbook -i ~/ansible/hosts.ini ~/ansible/install_docker.yml
+            ansible-playbook -i ~/ansible/ansible/hosts.ini ~/ansible/ansible/install_docker.yml
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/my-nginx-site:latest
             docker stop my-nginx-container || true
             docker rm my-nginx-container || true
