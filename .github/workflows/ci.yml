@@ -121,16 +121,22 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up Ansible
-      uses: rainerd/ansible-action@v2
+    - name: Set up Python
+      uses: actions/setup-python@v4
       with:
-        version: 2.14.0  # Specify the Ansible version if needed
+        python-version: '3.9'
+
+    - name: Install Ansible
+      run: |
+        python -m pip install --upgrade pip
+        pip install ansible
 
     - name: Set up SSH
       uses: webfactory/ssh-agent@v0.5.3
       with:
-        ssh-private-key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
     - name: Run Ansible Playbook
       run: |
-        ansible-playbook -i ${{ secrets.DIGITALOCEAN_VM_IP }}, -u ${{ secrets.DIGITALOCEAN_VM_USERNAME }} -e "ansible_python_interpreter=/usr/bin/python3" install_docker.yml
+        ansible-playbook -i ${{ secrets.REMOTE_HOST }}, -u ${{ secrets.REMOTE_USER }} -e "ansible_python_interpreter=/usr/bin/python3" install_docker.yml
+
