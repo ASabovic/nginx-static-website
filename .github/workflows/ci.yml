@@ -134,9 +134,9 @@ jobs:
     - name: Set up SSH
       uses: webfactory/ssh-agent@v0.5.3
       with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        ssh-private-key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
 
     - name: Run Ansible Playbook
       run: |
-        ansible-playbook -i ${{ secrets.REMOTE_HOST }}, -u ${{ secrets.REMOTE_USER }} -e "ansible_python_interpreter=/usr/bin/python3" install_docker.yml
+        ansible-playbook -i ${{ secrets.DIGITALOCEAN_VM_IP }}, -u ${{ secrets.DIGITALOCEAN_VM_USERNAME }} -e "ansible_python_interpreter=/usr/bin/python3" install_docker.yml
 
