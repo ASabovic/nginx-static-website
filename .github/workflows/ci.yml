@@ -43,13 +43,17 @@ jobs:
           mkdir -p ~/ansible
           cp -r ansible/* ~/ansible/
       
-      - name: Run Ansible playbook
-        env: 
-          DIGITALOCEAN_VM_IP: ${{ secrets.DIGITALOCEAN_VM_IP }}
-          DIGITALOCEAN_VM_USERNAME: ${{ secrets.DIGITALOCEAN_VM_USERNAME }}
-          SSH_PRIVATE_KEY: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
+      - name: Print Ansible Inventory
         run: |
-          ansible-playbook -i ~/ansible/hosts.ini ~/ansible/install_docker.yml
+          cat ~/ansible/hosts.ini
+      
+      # - name: Run Ansible playbook
+      #   env: 
+      #     DIGITALOCEAN_VM_IP: ${{ secrets.DIGITALOCEAN_VM_IP }}
+      #     DIGITALOCEAN_VM_USERNAME: ${{ secrets.DIGITALOCEAN_VM_USERNAME }}
+      #     SSH_PRIVATE_KEY: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
+      #   run: |
+      #     ansible-playbook -i ~/ansible/hosts.ini ~/ansible/install_docker.yml
 
       - name: Connect to DigitalOcean VM via SSH and deploy the new Docker image 
         uses: appleboy/ssh-action@v0.1.7
@@ -60,6 +64,7 @@ jobs:
           #password: ${{ secrets.DIGITALOCEAN_VM_PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
+            ansible-playbook -i ~/ansible/hosts.ini ~/ansible/install_docker.yml
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/my-nginx-site:latest
             docker stop my-nginx-container || true
             docker rm my-nginx-container || true
