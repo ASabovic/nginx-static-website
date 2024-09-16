@@ -28,6 +28,14 @@ jobs:
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/my-nginx-site:latest .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/my-nginx-site:latest
 
+      - name: Set correct SSH key permissions
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.DIGITALOCEAN_VM_IP }} >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
       - name: Create Ansible directory on VM
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -57,7 +65,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             echo "[ubuntu]" > ~/ansible/hosts.ini
-            echo "${{ secrets.DIGITALOCEAN_VM_IP }} ansible_ssh_user=${{ secrets.DIGITALOCEAN_VM_USERNAME }} ansible_ssh_private_key_file=~/.ssh/known_hosts" >> ~/ansible/hosts.ini
+            echo "${{ secrets.DIGITALOCEAN_VM_IP }} ansible_ssh_user=${{ secrets.DIGITALOCEAN_VM_USERNAME }} ansible_ssh_private_key_file=~/.ssh/id_rsa" >> ~/ansible/hosts.ini
 
       - name: Print Ansible Inventory
         uses: appleboy/ssh-action@v0.1.7
@@ -78,7 +86,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             export ANSIBLE_HOST_KEY_CHECKING=False
-            ansible-playbook -i ~/ansible/hosts.ini ~/ansible/ansible/install_docker.yml
+            ansible-playbook -i ~/ansible/hosts.ini ~/ansible/install_docker.yml
 
       - name: Deploy Docker container
         uses: appleboy/ssh-action@v0.1.7
