@@ -68,7 +68,12 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cat ~/ansible/hosts.ini
-
+      
+      - name: Add remote host key to known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.DIGITALOCEAN_VM_IP }} >> ~/.ssh/known_hosts
+          
       - name: Run Ansible playbook on VM to install Docker
         uses: appleboy/ssh-action@v0.1.7
         with:
