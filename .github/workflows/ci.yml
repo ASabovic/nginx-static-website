@@ -37,6 +37,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             mkdir -p ~/ansible
+            chmod 755 ~/ansible
 
       - name: Copy Ansible files to VM
         uses: appleboy/scp-action@v0.1.3
@@ -48,6 +49,18 @@ jobs:
           source: 'ansible/*'
           target: '~/'
 
+      - name: Set permissions for Ansible files
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.DIGITALOCEAN_VM_IP }}
+          username: ${{ secrets.DIGITALOCEAN_VM_USERNAME }}
+          key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            chmod 644 ~/ansible/install_docker.yml
+            chmod 644 ~/ansible/hosts.ini
+            chmod 755 ~/ansible
+
       - name: Create hosts.ini dynamically on VM
         uses: appleboy/ssh-action@v0.1.7
         with:
@@ -57,8 +70,9 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             echo "[ubuntu]" > ~/ansible/hosts.ini
-            echo "${{ secrets.DIGITALOCEAN_VM_IP }} ansible_ssh_user=${{ secrets.DIGITALOCEAN_VM_USERNAME }} ansible_ssh_private_key_file=${{ secrets.DIGITALOCEAN_SSH_PUBLIC_KEY }}" >> ~/ansible/hosts.ini
-
+            echo "${{ secrets.DIGITALOCEAN_VM_IP }} ansible_ssh_user=${{ secrets.DIGITALOCEAN_VM_USERNAME }} ansible_ssh_private_key_file=${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}" >> ~/ansible/hosts.ini
+            chmod 644 ~/ansible/hosts.ini
+            
       - name: Print Ansible Inventory
         uses: appleboy/ssh-action@v0.1.7
         with:
