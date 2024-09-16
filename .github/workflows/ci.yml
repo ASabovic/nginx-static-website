@@ -48,26 +48,26 @@ jobs:
           source: 'ansible/*'
           target: '~/'
 
-      # - name: Create hosts.ini dynamically on VM
-      #   uses: appleboy/ssh-action@v0.1.7
-      #   with:
-      #     host: ${{ secrets.DIGITALOCEAN_VM_IP }}
-      #     username: ${{ secrets.DIGITALOCEAN_VM_USERNAME }}
-      #     key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
-      #     port: ${{ secrets.PORT }}
-      #     script: |
-      #       echo "[ubuntu]" > ~/ansible/hosts.ini
-      #       echo "${{ secrets.DIGITALOCEAN_VM_IP }} ansible_ssh_user=${{ secrets.DIGITALOCEAN_VM_USERNAME }} ansible_ssh_private_key_file=~/.ssh/authorized_keys2" >> ~/ansible/hosts.ini
+      - name: Create hosts.ini dynamically on VM
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.DIGITALOCEAN_VM_IP }}
+          username: ${{ secrets.DIGITALOCEAN_VM_USERNAME }}
+          key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            echo "[ubuntu]" > ~/ansible/hosts.ini
+            echo "${{ secrets.DIGITALOCEAN_VM_IP }} ansible_ssh_user=${{ secrets.DIGITALOCEAN_VM_USERNAME }} ansible_ssh_private_key_file=~/.ssh/authorized_keys2" >> ~/ansible/hosts.ini
 
-      # - name: Print Ansible Inventory
-      #   uses: appleboy/ssh-action@v0.1.7
-      #   with:
-      #     host: ${{ secrets.DIGITALOCEAN_VM_IP }}
-      #     username: ${{ secrets.DIGITALOCEAN_VM_USERNAME }}
-      #     key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
-      #     port: ${{ secrets.PORT }}
-      #     script: |
-      #       cat ~/ansible/hosts.ini
+      - name: Print Ansible Inventory
+        uses: appleboy/ssh-action@v0.1.7
+        with:
+          host: ${{ secrets.DIGITALOCEAN_VM_IP }}
+          username: ${{ secrets.DIGITALOCEAN_VM_USERNAME }}
+          key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cat ~/ansible/hosts.ini
 
       - name: Run Ansible playbook on VM to install Docker
         uses: appleboy/ssh-action@v0.1.7
@@ -87,9 +87,7 @@ jobs:
           key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            # docker pull ${{ secrets.DOCKERHUB_USERNAME }}/my-nginx-site:latest
-            # docker stop my-nginx-container || true
-            # docker rm my-nginx-container || true
-            # docker run -d --name my-nginx-container -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/my-nginx-site:latest
-
-            echo "everything is nice!"
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/my-nginx-site:latest
+            docker stop my-nginx-container || true
+            docker rm my-nginx-container || true
+            docker run -d --name my-nginx-container -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/my-nginx-site:latest
