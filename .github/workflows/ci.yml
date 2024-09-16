@@ -46,7 +46,7 @@ jobs:
           key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
           port: ${{ secrets.PORT }}
           source: 'ansible/*'
-          target: '~/ansible/'
+          target: '~/ansible'
 
       - name: Create hosts.ini dynamically on VM
         uses: appleboy/ssh-action@v0.1.7
