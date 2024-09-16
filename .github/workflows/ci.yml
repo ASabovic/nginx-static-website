@@ -47,8 +47,8 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             sudo apt update
-            sudo apt install -y python3-pip
-            pip3 install ansible
+            # sudo apt install -y python3-pip
+            # pip3 install ansible
 
       - name: Copy Ansible files to VM
         uses: appleboy/scp-action@v0.1.3
