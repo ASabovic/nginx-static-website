@@ -86,7 +86,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             export ANSIBLE_HOST_KEY_CHECKING=False
-            ansible-playbook -i ~/ansible/hosts.ini ~/ansible/install_docker.yml
+            ansible-playbook -i ~/ansible/hosts.ini ~/ansible/ansible/install_docker.yml
 
       - name: Deploy Docker container
         uses: appleboy/ssh-action@v0.1.7
