@@ -70,8 +70,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             echo "[ubuntu]" > ~/ansible/hosts.ini
-            # echo "${{ secrets.DIGITALOCEAN_VM_IP }} ansible_ssh_user=${{ secrets.DIGITALOCEAN_VM_USERNAME }} ansible_ssh_private_key_file=${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}" >> ~/ansible/hosts.ini
-            echo "${{ secrets.DIGITALOCEAN_VM_IP }} ansible_ssh_user=${{ secrets.DIGITALOCEAN_VM_USERNAME }}" >> ~/ansible/hosts.ini
+            echo "${{ secrets.DIGITALOCEAN_VM_IP }} ansible_ssh_user=${{ secrets.DIGITALOCEAN_VM_USERNAME }} ansible_ssh_private_key_file=${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}" >> ~/ansible/hosts.ini
             chmod 644 ~/ansible/hosts.ini
             
       - name: Print Ansible Inventory
