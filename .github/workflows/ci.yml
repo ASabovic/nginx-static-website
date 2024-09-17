@@ -142,8 +142,7 @@ jobs:
 
     - name: Run Ansible Playbook
       run: |
-        ansible-playbook -i "${{ secrets.DIGITALOCEAN_VM_IP }}," -u root \
-        -e "ansible_python_interpreter=/usr/bin/python3" ansible/install_docker.yml -vvvv
+        ansible-playbook -i ansible/inventory.ini ansible/install_docker.yml -vvvv
 
 
 
