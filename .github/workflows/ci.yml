@@ -140,6 +140,6 @@ jobs:
       run: |
         # ansible-playbook -i ${{ secrets.DIGITALOCEAN_VM_IP }}, -u ${{ secrets.DIGITALOCEAN_VM_USERNAME }} -e "ansible_python_interpreter=/usr/bin/python3" ansible/install_docker.yml
         # ansible-playbook -i "188.166.23.90," -u root -e "ansible_python_interpreter=/usr/bin/python3" ansible/install_docker.yml
-        ansible all -i "188.166.23.90," -u root -m ping
+        ansible all -i "188.166.23.90," -u root -m ping -vvvv
 
 
