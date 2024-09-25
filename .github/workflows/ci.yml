@@ -78,7 +78,7 @@ jobs:
           key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY_2 }}
           script: |
             export DOCKERHUB_USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"
-            cd /root/docker-deployment
+            cd /ado/docker-deployment
             docker-compose down || true
             docker-compose pull
             docker-compose up -d
