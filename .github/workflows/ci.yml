@@ -74,7 +74,7 @@ jobs:
           # key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
           key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY_2 }}
           script: |
-            cd /path/to/your/docker-compose-directory
+            cd /root/docker-deployment
             docker-compose down || true
             docker-compose pull
             docker-compose up -d
