@@ -44,11 +44,11 @@ jobs:
           # ssh-private-key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
           ssh-private-key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY_2 }}
     
-      # Optional: Test SSH connection to the server
-      - name: Test SSH Connection
-        run: 
-          # ssh -o StrictHostKeyChecking=no ${{ secrets.RPI5_USERNAME }}@${{ secrets.RPI5_IP }} "echo Connection Successful"
-          #ssh -o StrictHostKeyChecking=no ado@$192.168.0.174 "echo Connection Successful"
+      # # Optional: Test SSH connection to the server
+      # - name: Test SSH Connection
+      #   run: 
+      #     # ssh -o StrictHostKeyChecking=no ${{ secrets.RPI5_USERNAME }}@${{ secrets.RPI5_IP }} "echo Connection Successful"
+      #     ssh -o StrictHostKeyChecking=no ado@$192.168.0.174 "echo Connection Successful"
     
       - name: Run Ansible Playbook
         run: |
