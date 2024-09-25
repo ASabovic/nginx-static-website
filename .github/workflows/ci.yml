@@ -47,8 +47,8 @@ jobs:
       # Optional: Test SSH connection to the server
       - name: Test SSH Connection
         run: 
-          ssh -o StrictHostKeyChecking=no ${{ secrets.DIGITALOCEAN_VM_USERNAME }}@${{ secrets.DIGITALOCEAN_VM_IP }} "echo Connection Successful"
-          #ssh -o StrictHostKeyChecking=no ${{ secrets.RPI5_USERNAME }}@${{ secrets.RPI5_IP }} "echo Connection Successful"
+          #ssh -o StrictHostKeyChecking=no ${{ secrets.DIGITALOCEAN_VM_USERNAME }}@${{ secrets.DIGITALOCEAN_VM_IP }} "echo Connection Successful"
+          ssh -o StrictHostKeyChecking=no ${{ secrets.RPI5_USERNAME }}@${{ secrets.RPI5_IP }} "echo Connection Successful"
     
       - name: Run Ansible Playbook
         run: |
@@ -70,11 +70,11 @@ jobs:
       - name: Deploy using Docker Compose
         uses: appleboy/ssh-action@v0.1.7
         with:
-          host: ${{ secrets.DIGITALOCEAN_VM_IP }}
-          username: ${{ secrets.DIGITALOCEAN_VM_USERNAME }}
+          # host: ${{ secrets.DIGITALOCEAN_VM_IP }}
+          # username: ${{ secrets.DIGITALOCEAN_VM_USERNAME }}
           # key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
-          # host: ${{ secrets.RPI5_IP }}
-          # username: ${{ secrets.RPI5_USERNAME }}
+          host: ${{ secrets.RPI5_IP }}
+          username: ${{ secrets.RPI5_USERNAME }}
           key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY_2 }}
           script: |
             export DOCKERHUB_USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"
