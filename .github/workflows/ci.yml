@@ -72,7 +72,7 @@ jobs:
           host: ${{ secrets.DIGITALOCEAN_VM_IP }}
           username: ${{ secrets.DIGITALOCEAN_VM_USERNAME }}
           # key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
-          ssh-private-key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY_2 }}
+          key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY_2 }}
           script: |
             cd /path/to/your/docker-compose-directory
             docker-compose down || true
