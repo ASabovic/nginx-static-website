@@ -47,7 +47,8 @@ jobs:
       # Optional: Test SSH connection to the server
       - name: Test SSH Connection
         run: 
-          ssh -o StrictHostKeyChecking=no ${{ secrets.RPI5_USERNAME }}@${{ secrets.RPI5_IP }} "echo Connection Successful"
+          # ssh -o StrictHostKeyChecking=no ${{ secrets.RPI5_USERNAME }}@${{ secrets.RPI5_IP }} "echo Connection Successful"
+          ssh -o StrictHostKeyChecking=no ado@${{ secrets.RPI5_IP }} "echo Connection Successful"
     
       - name: Run Ansible Playbook
         run: |
