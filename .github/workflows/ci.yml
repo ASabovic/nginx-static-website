@@ -74,9 +74,13 @@ jobs:
           # key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
           key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY_2 }}
           script: |
-            cd /root/docker-deployment
-            docker-compose down || true
-            docker-compose pull
-            docker-compose up -d
+            ssh -o StrictHostKeyChecking=no root@${{ secrets.DIGITALOCEAN_VM_IP }} << 'EOF'
+              export DOCKERHUB_USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"
+              cd /root/docker-deployment
+              docker-compose down || true
+              docker-compose pull
+              docker-compose up -d
+            EOF
+
 
 
