@@ -34,7 +34,7 @@ jobs:
         run: | 
           # ssh -N -L ${{secrets.ROUTER_PORT}}:${{secrets.RPI5_IP}}:${{secrets.PORT}} -p ${{ secrets.ROUTER_PORT }} ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP}} &
           # sleep 5
-          ssh -N -L 2222:192.168.0.174:22 -p ${{ secrets.ROUTER_PORT }} ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP}} &
+          ssh -N -L 2222:192.168.0.174:2222 -p ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP}} &
           sleep 5
           
 
