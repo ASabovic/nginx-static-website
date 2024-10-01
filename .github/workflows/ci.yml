@@ -35,6 +35,10 @@ jobs:
           ssh -N -L ${{secrets.ROUTER_PORT}}:${{secrets.RPI5_IP}}:${{secrets.PORT}} -p ${{ secrets.ROUTER_PORT }} ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP}} &
           sleep 5
 
+      - name: Add Ansible Host Key
+        run: |
+          echo "localhost ansible_connection=ssh ansible_user=${{ secrets.RPI5_USERNAME }} ansible_ssh_private_key_file=~/.ssh/id_rsa ansible_port=${{ secrets.ROUTER_PORT }}" > ansible/inventory.ini
+
       - name: Run Ansible Playbook
         run: |
           ansible-playbook -i ansible/inventory.ini ansible/install_docker.yml
