@@ -27,7 +27,7 @@ jobs:
       - name: Set up SSH Tunnel
         run: |
           echo "Setting up SSH Tunnel..."
-          ssh -N -L ${{ secrets.ROUTER_PORT }}:${{ secrets.RPI5_IP }}:${{ secrets.PORT }} -p ${{ secrets.ROUTER_PORT }} ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }} &
+          ssh -L ${{ secrets.ROUTER_PORT }}:${{ secrets.RPI5_IP }}:${{ secrets.PORT }} ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }} &
           sleep 5  # Wait for the tunnel to establish
 
       - name: Create Ansible Inventory
