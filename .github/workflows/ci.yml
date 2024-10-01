@@ -32,9 +32,12 @@ jobs:
       
       - name: Add router public IP address to known hosts
         run: | 
-          ssh -N -L ${{secrets.ROUTER_PORT}}:${{secrets.RPI5_IP}}:${{secrets.PORT}} -p ${{ secrets.ROUTER_PORT }} ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP}} &
+          # ssh -N -L ${{secrets.ROUTER_PORT}}:${{secrets.RPI5_IP}}:${{secrets.PORT}} -p ${{ secrets.ROUTER_PORT }} ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP}} &
+          # sleep 5
+          ssh -N -L 2222:192.168.0.174:22 -p ${{ secrets.ROUTER_PORT }} ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP}} &
           sleep 5
           
+
       - name: Test SSH Connection
         run: |
           ssh -o StrictHostKeyChecking=no -p 2222 localhost "echo Connection Successful"
