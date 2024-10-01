@@ -14,50 +14,28 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-    
-      - name: Install Ansible
+      - name: Set up SSH Tunnel
         run: |
-          python -m pip install --upgrade pip
-          pip install ansible
-
-      - name: Set up SSH private key
-        run: | 
-          mkdir -p ~/.ssh
-          echo "${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY_2 }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-      
-      - name: Add router public IP address to known hosts
-        run: | 
-          # ssh -N -L ${{secrets.ROUTER_PORT}}:${{secrets.RPI5_IP}}:${{secrets.PORT}} -p ${{ secrets.ROUTER_PORT }} ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP}} &
-          # sleep 5
-          ssh -N -L 2222:192.168.0.174:2222 -p ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP}} &
-          sleep 5
-          
+          echo "Setting up SSH Tunnel..."
+          ssh -N -L 2222:${{ secrets.RPI5_IP }}:22 -p ${{ secrets.ROUTER_PORT }} ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }} &
+          sleep 5  # Wait for the tunnel to establish
 
       - name: Test SSH Connection
         run: |
+          echo "Testing SSH connection to localhost through the tunnel..."
           ssh -o StrictHostKeyChecking=no -p 2222 localhost "echo Connection Successful"
 
+      # - name: Create Ansible Inventory
+      #   run: |
+      #     echo "[ubuntu]" > inventory.ini
+      #     echo "localhost ansible_connection=ssh ansible_user=${{ secrets.RPI5_USERNAME }} ansible_ssh_private_key_file=~/.ssh/id_rsa ansible_port=2222" >> inventory.ini
+      #     echo "Contents of the inventory file:"
+      #     cat inventory.ini  # Debugging: show the contents of the inventory file
 
-      - name: Add Ansible Host Key
-        run: |
-          echo "[ubuntu]" > inventory.ini
-          echo "localhost ansible_connection=ssh ansible_user=${{ secrets.RPI5_USERNAME }} ansible_ssh_private_key_file=~/.ssh/id_rsa ansible_port=${{ secrets.ROUTER_PORT }}" >> inventory.ini
-
-      - name: Debug Inventory File
-        run: |
-          cat inventory.ini
-          echo "Contents of the inventory file: "
-          cat inventory.ini
-
-      - name: Run Ansible Playbook
-        run: |
-          ansible-playbook -i inventory.ini ansible/install_docker.yml
-        env: 
-          ANSIBLE_HOST_KEY_CHECKING: "false"
-          ANSIBLE_USER: ${{ secrets.RPI5_USERNAME }}
-          ANSIBLE_SSH_PRIVATE_KEY_FILE: ~/.ssh/id_rsa
+      # - name: Run Ansible Playbook
+      #   run: |
+      #     echo "Running Ansible playbook..."
+      #     ANSIBLE_HOST_KEY_CHECKING=false ansible-playbook -i inventory.ini ansible/install_docker.yml
+      #   env:
+      #     ANSIBLE_USER: ${{ secrets.RPI5_USERNAME }}
+      #     ANSIBLE_SSH_PRIVATE_KEY_FILE: ~/.ssh/id_rsa
