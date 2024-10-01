@@ -14,14 +14,22 @@ jobs:
       - name: Test network connectivity to router
         run: |
           echo "Pinging the router..."
-          ping -c 4 ${{ secrets.ROUTER_PUBLIC_IP }}
+          if ! ping -c 4 ${{ secrets.ROUTER_PUBLIC_IP }}; then
+            echo "Ping failed. Unable to reach the router."
+            exit 1
+          fi
 
       - name: Check if port is open on router
         run: |
-          nc -zv ${{ secrets.ROUTER_PUBLIC_IP }} ${{ secrets.ROUTER_PORT }}
+          echo "Checking if port is open on the router..."
+          if ! nc -zv ${{ secrets.ROUTER_PUBLIC_IP }} ${{ secrets.ROUTER_PORT }}; then
+            echo "Port check failed. Unable to connect to port ${ROUTER_PORT}."
+            exit 1
+          fi
 
       - name: Add router public IP address to known hosts
         run: | 
+          echo "Adding router public IP to known hosts..."
           ssh-keyscan -p ${{ secrets.ROUTER_PORT }} ${{ secrets.ROUTER_PUBLIC_IP }} >> ~/.ssh/known_hosts
 
 
