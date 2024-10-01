@@ -58,7 +58,7 @@ jobs:
       
       - name: Add router public IP address to known hosts
         run: | 
-          sh-keyscan -p ${{ secrets.ROUTER_PORT }} ${{ secrets.ROUTER_PUBLIC_IP }} >> ~/.ssh/known_hosts
+          ssh-keyscan -p ${{ secrets.ROUTER_PORT }} ${{ secrets.ROUTER_PUBLIC_IP }} >> ~/.ssh/known_hosts
       
       - name: Run Ansible Playbook
         run: |
