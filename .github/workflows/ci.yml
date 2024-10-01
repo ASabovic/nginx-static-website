@@ -32,7 +32,7 @@ jobs:
       
       - name: Add router public IP address to known hosts
         run: | 
-          ssh -N -L <LOCAL_PORT>:<LOCAL_MACHINE_IP>:<REMOTE_PORT> -p ${{ secrets.ROUTER_PORT }} ${{ secrets.RPI5_USERNAME }}@${{ secrets.PORT}} &
+          ssh -N -L ${{secrets.ROUTER_PORT}}:${{secrets.RPI5_IP}}:${{secrets.PORT}} -p ${{ secrets.ROUTER_PORT }} ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP}} &
           sleep 5
 
       - name: Run Ansible Playbook
