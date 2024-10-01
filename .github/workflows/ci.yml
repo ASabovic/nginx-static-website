@@ -30,6 +30,11 @@ jobs:
           ssh -L ${{ secrets.ROUTER_PORT }}:${{ secrets.RPI5_IP }}:${{ secrets.PORT }} ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }} &
           sleep 5  # Wait for the tunnel to establish
 
+      - name: Test SSH Connection
+        run: |
+          echo "Testing SSH connection to the local machine through the tunnel..."
+          ssh -o StrictHostKeyChecking=no -p 2222 ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }} "echo Connection Successful" 
+
       - name: Create Ansible Inventory
         run: |
           echo "[ubuntu]" > inventory.ini
