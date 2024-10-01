@@ -38,21 +38,37 @@ jobs:
           python -m pip install --upgrade pip
           pip install ansible
       
-      - name: Set up SSH
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          # ssh-private-key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
-          ssh-private-key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY_2 }}
+      # - name: Set up SSH
+      #   uses: webfactory/ssh-agent@v0.5.3
+      #   with:
+      #     # ssh-private-key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
+      #     ssh-private-key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY_2 }}
     
-      # Optional: Test SSH connection to the server
-      - name: Test SSH Connection
-        run: 
-          #ssh -o StrictHostKeyChecking=no ${{ secrets.DIGITALOCEAN_VM_USERNAME }}@${{ secrets.DIGITALOCEAN_VM_IP }} "echo Connection Successful"
-          ssh -o StrictHostKeyChecking=no ${{ secrets.RPI5_USERNAME }}@${{ secrets.RPI5_IP }} "echo Connection Successful"
-    
+      # # Optional: Test SSH connection to the server
+      # - name: Test SSH Connection
+      #   run: 
+      #     #ssh -o StrictHostKeyChecking=no ${{ secrets.DIGITALOCEAN_VM_USERNAME }}@${{ secrets.DIGITALOCEAN_VM_IP }} "echo Connection Successful"
+      #     ssh -o StrictHostKeyChecking=no ${{ secrets.RPI5_USERNAME }}@${{ secrets.RPI5_IP }} "echo Connection Successful"
+
+      - name: Set up SSH private key
+        run: | 
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY_2 }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+      
+      - name: Add router public IP address to known hosts
+        run: | 
+          sh-keyscan -p ${{ secrets.ROUTER_PORT }} ${{ secrets.ROUTER_PUBLIC_IP }} >> ~/.ssh/known_hosts
+      
       - name: Run Ansible Playbook
         run: |
-          ansible-playbook -i ansible/inventory.ini ansible/install_docker.yml
+          # ansible-playbook -i ansible/inventory.ini ansible/install_docker.yml
+          ansible-playbook -i "${{ secrets.ROUTER_PUBLIC_IP }}:${{ secrets.ROUTER_PORT }}," ansible/install_docker.yml
+        env: |
+          ANSIBLE_HOST_KEY_CHECKING: "false"
+        ansible_env: |
+          ansible_user: ${{ secrets.RPI5_USERNAME }}
+          ansible_ssh_private_key_file: ~/.ssh/id_rsa
 
       # - name: Deploy Docker container
       #   uses: appleboy/ssh-action@v0.1.7
@@ -73,7 +89,8 @@ jobs:
           # host: ${{ secrets.DIGITALOCEAN_VM_IP }}
           # username: ${{ secrets.DIGITALOCEAN_VM_USERNAME }}
           # key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY }}
-          host: ${{ secrets.RPI5_IP }}
+          host: ${{ secrets.ROUTER_PUBLIC_IP }}
+          port: ${{ secrets.ROUTER_PORT }}
           username: ${{ secrets.RPI5_USERNAME }}
           key: ${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY_2 }}
           script: |
