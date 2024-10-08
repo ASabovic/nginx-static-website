@@ -33,7 +33,7 @@ jobs:
       - name: Set up SSH Tunnel
         run: |
           echo "Setting up SSH Tunnel..."
-          ssh -o StrictHostKeyChecking=no -L 2223:${{ secrets.RPI5_IP }}:22 ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }} -p ${{
+          ssh -o StrictHostKeyChecking=no -L ${{secrets.ROUTER_PORT }}:${{ secrets.RPI5_IP }}:${{secrets.PORT }} ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }} -p ${{
             secrets.ROUTER_PORT }} -N &
           sleep 5  # Wait for the tunnel to establish
 
