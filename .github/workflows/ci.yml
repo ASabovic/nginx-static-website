@@ -29,6 +29,9 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.DIGITALOCEAN_SSH_PRIVATE_KEY_2 }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+      
+      - name: Add the Raspberry Pi's SSH key to known hosts
+        run: |
           ssh-keyscan -H ${{ secrets.RPI5_IP }} >> ~/.ssh/known_hosts
 
       - name: Set up SSH Tunnel
