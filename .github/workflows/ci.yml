@@ -39,7 +39,7 @@ jobs:
       - name: Test SSH Connection
         run: |
           echo "Testing SSH connection to the local machine through the tunnel..."
-          ssh -o StrictHostKeyChecking=no -p 2222 localhost "echo Connection Successful" 
+          ssh -o StrictHostKeyChecking=no -p 2223 localhost "echo Connection Successful" 
 
       # - name: Create Ansible Inventory
       #   run: |
