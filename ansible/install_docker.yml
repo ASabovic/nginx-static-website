@@ -1,7 +1,7 @@
 ---
 - name: Install Docker on Ubuntu 24.04
   hosts: ubuntu
-  become: yes
+  become: true
   tasks:
     - name: Update apt package index
       apt:
