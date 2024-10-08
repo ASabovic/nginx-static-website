@@ -33,15 +33,14 @@ jobs:
       - name: Set up SSH Tunnel
         run: |
           echo "Setting up SSH Tunnel..."
-          # ssh -L 2222:${{ secrets.RPI_LOCAL_IP }}:22 ${{ secrets.ROUTER_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }} -p ${{
-          #   secrets.ROUTER_PORT }} -N &
-          ssh -p ${{secrets.ROUTER_PORT }} ${{ secrets.ROUTER_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }} &
+          ssh -f -N -L 2223:${{ secrets.RPI5_IP }}:22 ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }} -p ${{
+            secrets.ROUTER_PORT }} -N &
           sleep 5  # Wait for the tunnel to establish
 
       - name: Test SSH Connection
         run: |
           echo "Testing SSH connection to the local machine through the tunnel..."
-          ssh -o StrictHostKeyChecking=no -p 2223 ${{ secrets.ROUTER_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }} "echo Connection Successful" 
+          ssh -o StrictHostKeyChecking=no -p 2223 ado@localhost "echo Connection Successful" 
 
       # - name: Create Ansible Inventory
       #   run: |
