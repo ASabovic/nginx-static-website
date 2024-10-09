@@ -14,6 +14,22 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Build and push Docker image
+        run: |
+          # Get the latest commit hash
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+
+          docker buildx build -t ${{ secrets.DOCKERHUB_USERNAME }}/reactjs-app:latest -t ${{ secrets.DOCKERHUB_USERNAME }}/reactjs-app:${COMMIT_HASH} . --push
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -41,6 +57,20 @@ jobs:
         run: |
           echo "Testing SSH connection to the local machine through the tunnel..."
           ssh -o StrictHostKeyChecking=no -p ${{ secrets.ROUTER_PORT }} ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }} "echo Connection Successful" 
+      
+      - name: Create directories on Raspberry Pi 5
+        run: |
+          ssh -o StrictHostKeyChecking=no -p ${{ secrets.ROUTER_PORT }} ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }} << 'EOF'
+            mkdir -p /${{ secrets.RPI5_USERNAME }}/docker-deployment/nginx
+            mkdir -p /${{ secrets.RPI5_USERNAME }}/docker-deployment/prometheus
+          EOF
+      
+      - name: Copy files to created directories on Raspberry Pi 5
+        run: |
+          echo "Copying files to Raspberry Pi..."
+          scp -o StrictHostKeyChecking=no -P ${{ secrets.ROUTER_PORT }} docker-compose.yml ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }}:/ado/docker-deployment/
+          scp -o StrictHostKeyChecking=no -P ${{ secrets.ROUTER_PORT }} nginx/default.conf ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }}:/ado/docker-deployment/nginx/
+          scp -o StrictHostKeyChecking=no -P ${{ secrets.ROUTER_PORT }} prometheus/prometheus.yml ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }}:/ado/docker-deployment/prometheus/
 
       - name: Add Parameters to Existing Inventory File
         run: |
@@ -51,3 +81,15 @@ jobs:
       - name: Run Ansible Playbook
         run: |
           ansible-playbook -i ansible/inventory.ini ansible/install_docker.yml
+
+      - name: Deploy using Docker Compose
+        run: |
+          echo "Running Docker commands on Raspberry Pi..."
+          ssh -o StrictHostKeyChecking=no -p ${{ secrets.ROUTER_PORT }} ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }} << 'EOF'
+            export DOCKERHUB_USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"
+            cd /${{ secrets.RPI5_USERNAME }}/docker-deployment
+            export DOCKERHUB_USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"
+            docker-compose down || true
+            docker-compose pull
+            docker-compose up -d
+          EOF
