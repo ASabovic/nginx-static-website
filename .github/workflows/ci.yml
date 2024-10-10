@@ -61,16 +61,16 @@ jobs:
       - name: Create directories on Raspberry Pi 5
         run: |
           ssh -o StrictHostKeyChecking=no -p ${{ secrets.ROUTER_PORT }} ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }} << 'EOF'
-            mkdir -p /docker-deployment/nginx
-            mkdir -p /docker-deployment/prometheus
+            mkdir -p docker-deployment/nginx
+            mkdir -p docker-deployment/prometheus
           EOF
       
       - name: Copy files to created directories on Raspberry Pi 5
         run: |
           echo "Copying files to Raspberry Pi..."
-          scp -o StrictHostKeyChecking=no -P ${{ secrets.ROUTER_PORT }} docker-compose.yml ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }}:/docker-deployment/
-          scp -o StrictHostKeyChecking=no -P ${{ secrets.ROUTER_PORT }} nginx/default.conf ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }}:/docker-deployment/nginx/
-          scp -o StrictHostKeyChecking=no -P ${{ secrets.ROUTER_PORT }} prometheus/prometheus.yml ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }}:/docker-deployment/prometheus/
+          scp -o StrictHostKeyChecking=no -P ${{ secrets.ROUTER_PORT }} docker-compose.yml ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }}:docker-deployment/
+          scp -o StrictHostKeyChecking=no -P ${{ secrets.ROUTER_PORT }} nginx/default.conf ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }}:docker-deployment/nginx/
+          scp -o StrictHostKeyChecking=no -P ${{ secrets.ROUTER_PORT }} prometheus/prometheus.yml ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }}:docker-deployment/prometheus/
 
       - name: Add Parameters to Existing Inventory File
         run: |
