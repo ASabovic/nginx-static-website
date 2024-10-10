@@ -69,7 +69,7 @@ jobs:
         run: |
           echo "Copying files to Raspberry Pi..."
           scp -o StrictHostKeyChecking=no -P ${{ secrets.ROUTER_PORT }} docker-compose.yml ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }}:docker-deployment/
-          scp -o StrictHostKeyChecking=no -P ${{ secrets.ROUTER_PORT }} nginx/default.conf ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }}:docker-deployment/nginx/
+          scp -o StrictHostKeyChecking=no -P ${{ secrets.ROUTER_PORT }} default.conf ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }}:docker-deployment/nginx/
           scp -o StrictHostKeyChecking=no -P ${{ secrets.ROUTER_PORT }} prometheus/prometheus.yml ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }}:docker-deployment/prometheus/
 
       - name: Add Parameters to Existing Inventory File
