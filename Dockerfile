@@ -1,5 +1,5 @@
 # Step 1: Use the official Nginx image from Docker Hub
-FROM nginx:alpine
+FROM nginx:mainline-alpine3.20-slim
 
 # Copy the custom Nginx config file
 COPY default.conf /etc/nginx/conf.d/default.conf
