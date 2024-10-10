@@ -61,8 +61,8 @@ jobs:
       - name: Create directories on Raspberry Pi 5
         run: |
           ssh -o StrictHostKeyChecking=no -p ${{ secrets.ROUTER_PORT }} ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }} << 'EOF'
-            sudo mkdir -p /${{ secrets.RPI5_USERNAME }}/docker-deployment/nginx
-            sudo mkdir -p /${{ secrets.RPI5_USERNAME }}/docker-deployment/prometheus
+            echo "${{ secrets.RPI5_PASS }}" | sudo -S mkdir -p /ado/docker-deployment/nginx
+            echo "${{ secrets.RPI5_PASS }}" | sudo -S mkdir -p /ado/docker-deployment/prometheus
           EOF
       
       - name: Copy files to created directories on Raspberry Pi 5
