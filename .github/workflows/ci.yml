@@ -87,7 +87,7 @@ jobs:
           echo "Running Docker commands on Raspberry Pi..."
           ssh -o StrictHostKeyChecking=no -p ${{ secrets.ROUTER_PORT }} ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }} << 'EOF'
             export DOCKERHUB_USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"
-            cd /docker-deployment
+            cd docker-deployment
             export DOCKERHUB_USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"
             docker-compose down || true
             docker-compose pull
