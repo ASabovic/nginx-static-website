@@ -28,7 +28,7 @@ jobs:
           # Get the latest commit hash
           COMMIT_HASH=$(git rev-parse --short HEAD)
 
-          docker buildx build -t ${{ secrets.DOCKERHUB_USERNAME }}/reactjs-app:latest -t ${{ secrets.DOCKERHUB_USERNAME }}/reactjs-app:${COMMIT_HASH} . --push
+          docker buildx build -t ${{ secrets.DOCKERHUB_USERNAME }}/my-nginx-site:latest -t ${{ secrets.DOCKERHUB_USERNAME }}/my-nginx-site:${COMMIT_HASH} . --push
 
       - name: Set up Python
         uses: actions/setup-python@v4
