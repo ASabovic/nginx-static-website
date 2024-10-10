@@ -61,16 +61,16 @@ jobs:
       - name: Create directories on Raspberry Pi 5
         run: |
           ssh -o StrictHostKeyChecking=no -p ${{ secrets.ROUTER_PORT }} ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }} << 'EOF'
-            echo "${{ secrets.RPI5_PASS }}" | sudo -S mkdir -p /ado/docker-deployment/nginx
-            echo "${{ secrets.RPI5_PASS }}" | sudo -S mkdir -p /ado/docker-deployment/prometheus
+            mkdir -p /docker-deployment/nginx
+            mkdir -p /docker-deployment/prometheus
           EOF
       
       - name: Copy files to created directories on Raspberry Pi 5
         run: |
           echo "Copying files to Raspberry Pi..."
-          scp -o StrictHostKeyChecking=no -P ${{ secrets.ROUTER_PORT }} docker-compose.yml ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }}:/ado/docker-deployment/
-          scp -o StrictHostKeyChecking=no -P ${{ secrets.ROUTER_PORT }} nginx/default.conf ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }}:/ado/docker-deployment/nginx/
-          scp -o StrictHostKeyChecking=no -P ${{ secrets.ROUTER_PORT }} prometheus/prometheus.yml ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }}:/ado/docker-deployment/prometheus/
+          scp -o StrictHostKeyChecking=no -P ${{ secrets.ROUTER_PORT }} docker-compose.yml ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }}:/docker-deployment/
+          scp -o StrictHostKeyChecking=no -P ${{ secrets.ROUTER_PORT }} nginx/default.conf ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }}:/docker-deployment/nginx/
+          scp -o StrictHostKeyChecking=no -P ${{ secrets.ROUTER_PORT }} prometheus/prometheus.yml ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }}:/docker-deployment/prometheus/
 
       - name: Add Parameters to Existing Inventory File
         run: |
@@ -87,7 +87,7 @@ jobs:
           echo "Running Docker commands on Raspberry Pi..."
           ssh -o StrictHostKeyChecking=no -p ${{ secrets.ROUTER_PORT }} ${{ secrets.RPI5_USERNAME }}@${{ secrets.ROUTER_PUBLIC_IP }} << 'EOF'
             export DOCKERHUB_USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"
-            cd /${{ secrets.RPI5_USERNAME }}/docker-deployment
+            cd /docker-deployment
             export DOCKERHUB_USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"
             docker-compose down || true
             docker-compose pull
