@@ -1,5 +1,5 @@
 # Step 1: Use the official Nginx image from Docker Hub
-FROM nginx:stable-alpine
+FROM nginx:alpine
 
 # Copy the custom Nginx config file
 COPY default.conf /etc/nginx/conf.d/default.conf

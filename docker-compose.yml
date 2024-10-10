@@ -9,7 +9,7 @@ services:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
 
   prometheus:
-    image: prom/prometheus:v2.37.0
+    image: prom/prometheus:main
     container_name: prometheus
     ports:
       - "9090:9090"
@@ -17,7 +17,7 @@ services:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
 
   grafana:
-    image: grafana/grafana:latest-arm64
+    image: grafana/grafana:main-ubuntu
     container_name: grafana
     ports:
       - "3000:3000"
@@ -27,7 +27,7 @@ services:
       - grafana-storage:/var/lib/grafana
 
   nginx-exporter:
-    image: nginx/nginx-prometheus-exporter:latest
+    image: nginx/nginx-prometheus-exporter:edge
     container_name: nginx-exporter
     ports:
       - "9113:9113"
